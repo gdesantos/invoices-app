@@ -1,0 +1,19 @@
+CREATE TABLE Clients(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    vat TEXT NOT NULL,
+    address TEXT NOT NULL,
+    phone INTEGER NOT NULL,
+    email TEXT NOT NULL
+);
+
+selectAll:
+SELECT *
+FROM Clients;
+
+insert:
+INSERT INTO Clients(name, vat, address, phone, email)
+VALUES ?;
+
+delete:
+DELETE FROM Clients WHERE id = ?;
