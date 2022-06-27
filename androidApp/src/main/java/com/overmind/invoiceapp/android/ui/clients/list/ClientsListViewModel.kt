@@ -1,26 +1,24 @@
-package com.overmind.invoiceapp.android.ui.clients
+package com.overmind.invoiceapp.android.ui.clients.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.overmind.invoiceapp.domain.entities.Client
-import com.overmind.invoiceapp.domain.usecases.AddClient
 import com.overmind.invoiceapp.domain.usecases.DeleteClient
 import com.overmind.invoiceapp.domain.usecases.FetchClients
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ClientsViewModel(
+class ClientsListViewModel(
     private val fetchClients: FetchClients,
     private val deleteClient: DeleteClient
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<ClientsUiState> =
-        MutableStateFlow(ClientsUiState(emptyList()))
-    val uiState: StateFlow<ClientsUiState> = _uiState
+    private val _uiState: MutableStateFlow<ClientsListUiState> =
+        MutableStateFlow(ClientsListUiState(emptyList()))
+    val uiState: StateFlow<ClientsListUiState> = _uiState
 
     init {
-        viewModelScope.launch { fetchClients().collect { _uiState.value = ClientsUiState(it) } }
+        viewModelScope.launch { fetchClients().collect { _uiState.value = ClientsListUiState(it) } }
     }
 
     fun deleteClient(id: Int) {

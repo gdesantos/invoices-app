@@ -6,6 +6,6 @@ data class Client(
     val vat: String,
     val addressLine1: String,
     val addressLine2: String,
-    val telephone: Long,
+    val phone: Long,
     val email: String
 )

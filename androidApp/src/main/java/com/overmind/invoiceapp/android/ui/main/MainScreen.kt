@@ -18,10 +18,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.overmind.invoiceapp.android.R
-import com.overmind.invoiceapp.android.ui.clients.ClientsScreen
-import com.overmind.invoiceapp.android.ui.clients.CreateClientScreen
+import com.overmind.invoiceapp.android.ui.clients.clientsGraph
 import org.koin.androidx.compose.get
 
 @Composable
@@ -60,16 +58,12 @@ fun MainScreen(viewModel: MainViewModel = get()) {
             }
         }
     ) { innerPadding ->
-        NavHost(navController = navController, startDestination = Screen.Clients.route) {
-            navigation(startDestination = Screen.ClientsList.route, route = Screen.Clients.route) {
-                composable(Screen.ClientsList.route) {
-                    ClientsScreen(
-                        modifier = Modifier.padding(innerPadding),
-                        navController = navController
-                    )
-                }
-                composable(Screen.CreateClient.route) { CreateClientScreen() }
-            }
+        NavHost(
+            modifier = Modifier.padding(innerPadding),
+            navController = navController,
+            startDestination = Screen.Clients.route
+        ) {
+            clientsGraph(navController)
             composable(Screen.BusinessList.route) {}
             composable(Screen.ProductList.route) {}
             composable(Screen.Invoices.route) {}
@@ -88,13 +82,12 @@ private fun RowScope.Tab(
         icon = { Icon(painterResource(id = tabInfo.icon), contentDescription = null) },
         label = { Text(tabInfo.title) },
         selected =
-            navBackStackEntry?.destination?.hierarchy?.any { it.route == tabInfo.screen.route } ==
-                true,
+            navBackStackEntry?.destination?.hierarchy?.any { it.route == tabInfo.route } == true,
         enabled = enabled,
         selectedContentColor = Color.White,
         unselectedContentColor = Color.White.copy(alpha = 0.4f),
         onClick = {
-            navController.navigate(tabInfo.screen.route) {
+            navController.navigate(tabInfo.route) {
                 popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                 launchSingleTop = true
                 restoreState = true
@@ -103,9 +96,9 @@ private fun RowScope.Tab(
     )
 }
 
-private enum class TabInfo(val title: String, @DrawableRes val icon: Int, val screen: Screen) {
-    Clients("Clients", R.drawable.ic_clients, Screen.Clients),
-    Business("Business", R.drawable.ic_business, Screen.BusinessList),
-    Products("Products", R.drawable.ic_products, Screen.ProductList),
-    Invoices("Invoices", R.drawable.ic_invoices, Screen.Invoices)
+private enum class TabInfo(val title: String, @DrawableRes val icon: Int, val route: String) {
+    Clients("Clients", R.drawable.ic_clients, Screen.Clients.route),
+    Business("Business", R.drawable.ic_business, Screen.BusinessList.route),
+    Products("Products", R.drawable.ic_products, Screen.ProductList.route),
+    Invoices("Invoices", R.drawable.ic_invoices, Screen.Invoices.route)
 }

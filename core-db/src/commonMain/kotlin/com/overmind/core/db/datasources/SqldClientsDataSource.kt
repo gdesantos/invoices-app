@@ -36,7 +36,7 @@ class SqldClientsDataSource : ClientsDataSource, KoinComponent {
         addressLine1 = address.lines().firstOrNull() ?: "",
         addressLine2 = address.lines().getOrNull(1) ?: "",
         vat = vat,
-        telephone = phone,
+        phone = phone,
         email = email
     )
 
@@ -45,7 +45,7 @@ class SqldClientsDataSource : ClientsDataSource, KoinComponent {
         name = name,
         vat = vat,
         address = (addressLine1 + "\n" + addressLine2).trim(),
-        phone = telephone,
+        phone = phone,
         email = email
     )
 }

@@ -1,4 +1,4 @@
-package com.overmind.invoiceapp.android.ui.clients
+package com.overmind.invoiceapp.android.ui.clients.list
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,21 +17,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import com.overmind.invoiceapp.android.ui.main.Screen
 import com.overmind.invoiceapp.domain.entities.Client
 import org.koin.androidx.compose.get
 
 @Composable
-fun ClientsScreen(
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
-    viewModel: ClientsViewModel = get()
-) {
+fun ClientsScreen(navController: NavController, viewModel: ClientsListViewModel = get()) {
 
     val uiState by viewModel.uiState.collectAsState()
 
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         ClientsList(uiState = uiState)
         FloatingActionButton(
             modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
@@ -41,7 +37,7 @@ fun ClientsScreen(
 }
 
 @Composable
-private fun ClientsList(uiState: ClientsUiState) {
+private fun ClientsList(uiState: ClientsListUiState) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
@@ -59,7 +55,7 @@ private fun ClientItem(client: Client) {
             Column {
                 Text(
                     modifier = Modifier.padding(bottom = 6.dp),
-                    text = "${client.id} - ${client.name}",
+                    text = client.name,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -68,7 +64,7 @@ private fun ClientItem(client: Client) {
                 if (client.addressLine2.isNotEmpty()) {
                     ClientField(icon = null, text = client.addressLine2)
                 }
-                ClientField(icon = Icons.Outlined.Phone, text = client.telephone.toString())
+                ClientField(icon = Icons.Outlined.Phone, text = client.phone.toString())
                 ClientField(icon = Icons.Outlined.Email, text = client.email)
             }
             Column(modifier = Modifier.align(Alignment.CenterEnd)) {
@@ -97,7 +93,7 @@ private fun ClientField(icon: ImageVector?, text: String) {
 }
 
 @Composable
-private fun DeleteButton(client: Client, viewModel: ClientsViewModel = get()) {
+private fun DeleteButton(client: Client, viewModel: ClientsListViewModel = get()) {
     var showingConfirmationDlg by remember { mutableStateOf(false) }
 
     IconButton(onClick = { showingConfirmationDlg = true }) {
