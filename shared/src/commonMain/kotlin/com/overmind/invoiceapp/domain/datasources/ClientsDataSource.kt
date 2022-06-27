@@ -8,4 +8,5 @@ interface ClientsDataSource {
     suspend fun getClients(): Flow<List<Client>>
     suspend fun addClient(client: Client)
     suspend fun deleteClient(id: Int)
+    suspend fun getClient(id: Int): Flow<Client>
 }

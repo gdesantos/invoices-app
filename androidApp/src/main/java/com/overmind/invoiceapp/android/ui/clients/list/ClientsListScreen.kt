@@ -23,12 +23,12 @@ import com.overmind.invoiceapp.domain.entities.Client
 import org.koin.androidx.compose.get
 
 @Composable
-fun ClientsScreen(navController: NavController, viewModel: ClientsListViewModel = get()) {
+fun ClientsListScreen(navController: NavController, viewModel: ClientsListViewModel = get()) {
 
     val uiState by viewModel.uiState.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        ClientsList(uiState = uiState)
+        ClientsList(uiState = uiState, navController = navController)
         FloatingActionButton(
             modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
             onClick = { navController.navigate(Screen.CreateClient.route) }
@@ -37,16 +37,20 @@ fun ClientsScreen(navController: NavController, viewModel: ClientsListViewModel 
 }
 
 @Composable
-private fun ClientsList(uiState: ClientsListUiState) {
+private fun ClientsList(uiState: ClientsListUiState, navController: NavController) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) { items(uiState.clients) { client -> ClientItem(client = client) } }
+    ) {
+        items(uiState.clients) { client ->
+            ClientItem(client = client, navController = navController)
+        }
+    }
 }
 
 @Composable
-private fun ClientItem(client: Client) {
+private fun ClientItem(client: Client, navController: NavController) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(corner = CornerSize(8.dp)),
@@ -69,9 +73,7 @@ private fun ClientItem(client: Client) {
             }
             Column(modifier = Modifier.align(Alignment.CenterEnd)) {
                 DeleteButton(client)
-                IconButton(onClick = {}) {
-                    Icon(imageVector = Icons.Outlined.Edit, contentDescription = "Edit")
-                }
+                EditButton(client = client, navController = navController)
             }
         }
     }
@@ -121,18 +123,8 @@ private fun DeleteButton(client: Client, viewModel: ClientsListViewModel = get()
 }
 
 @Composable
-@Preview
-private fun ClientItemPreview() {
-    ClientItem(
-        client =
-            Client(
-                0,
-                "Gustavo de Santos",
-                "51451166M",
-                "Los Madroños 38",
-                "Alcorcón",
-                658632081L,
-                "gdesantos@gmail.com"
-            )
-    )
+private fun EditButton(client: Client, navController: NavController) {
+    IconButton(onClick = { navController.navigate(Screen.EditClient.forClient(client.id)) }) {
+        Icon(imageVector = Icons.Outlined.Edit, contentDescription = "Edit")
+    }
 }

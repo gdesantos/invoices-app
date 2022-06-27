@@ -6,6 +6,7 @@ import com.overmind.invoiceapp.domain.datasources.ClientsDataSource
 import com.overmind.invoiceapp.domain.entities.Client
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
+import com.squareup.sqldelight.runtime.coroutines.mapToOne
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.koin.core.component.KoinComponent
@@ -17,9 +18,7 @@ class SqldClientsDataSource : ClientsDataSource, KoinComponent {
 
     override suspend fun getClients(): Flow<List<Client>> =
         database.clientsQueries.selectAll().asFlow().mapToList().map {
-            it.map { row ->
-                row.toDomain()
-            }
+            it.map { row -> row.toDomain() }
         }
 
     override suspend fun addClient(client: Client) {
@@ -30,22 +29,27 @@ class SqldClientsDataSource : ClientsDataSource, KoinComponent {
         database.clientsQueries.delete(id.toLong())
     }
 
-    private fun Clients.toDomain() = Client(
-        id = id.toInt(),
-        name = name,
-        addressLine1 = address.lines().firstOrNull() ?: "",
-        addressLine2 = address.lines().getOrNull(1) ?: "",
-        vat = vat,
-        phone = phone,
-        email = email
-    )
+    override suspend fun getClient(id: Int): Flow<Client> =
+        database.clientsQueries.selectOne(id.toLong()).asFlow().mapToOne().map { it.toDomain() }
 
-    private fun Client.toDb() = Clients(
-        id = 0L,
-        name = name,
-        vat = vat,
-        address = (addressLine1 + "\n" + addressLine2).trim(),
-        phone = phone,
-        email = email
-    )
+    private fun Clients.toDomain() =
+        Client(
+            id = id.toInt(),
+            name = name,
+            addressLine1 = address.lines().firstOrNull() ?: "",
+            addressLine2 = address.lines().getOrNull(1) ?: "",
+            vat = vat,
+            phone = phone,
+            email = email
+        )
+
+    private fun Client.toDb() =
+        Clients(
+            id = 0L,
+            name = name,
+            vat = vat,
+            address = (addressLine1 + "\n" + addressLine2).trim(),
+            phone = phone,
+            email = email
+        )
 }

@@ -8,12 +8,13 @@ CREATE TABLE Clients(
 );
 
 selectAll:
-SELECT *
-FROM Clients;
+SELECT * FROM Clients;
+
+selectOne:
+SELECT * FROM Clients WHERE id == ?;
 
 insert:
-INSERT INTO Clients(name, vat, address, phone, email)
-VALUES ?;
+INSERT INTO Clients(name, vat, address, phone, email) VALUES ?;
 
 delete:
 DELETE FROM Clients WHERE id = ?;
