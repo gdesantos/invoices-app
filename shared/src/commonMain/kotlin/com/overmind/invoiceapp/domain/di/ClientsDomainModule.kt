@@ -9,4 +9,5 @@ val clientsDomainModule = module {
     factory { AddClient() }
     factory { DeleteClient() }
     factory { ValidateClient() }
+    factory { ModifyClient() }
 }

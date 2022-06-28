@@ -5,7 +5,7 @@ import com.overmind.invoiceapp.domain.entities.Client
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class AddClient : KoinComponent {
+class ModifyClient : KoinComponent {
 
     private val clientsDataSource by inject<ClientsDataSource>()
     private val validateClient by inject<ValidateClient>()
@@ -13,7 +13,7 @@ class AddClient : KoinComponent {
     suspend operator fun invoke(client: Client): ValidateClient.Result {
         return when(val result = validateClient(client)) {
             ValidateClient.Result.Ok -> {
-                clientsDataSource.addClient(client)
+                clientsDataSource.modifyClient(client)
                 result
             }
             else -> result

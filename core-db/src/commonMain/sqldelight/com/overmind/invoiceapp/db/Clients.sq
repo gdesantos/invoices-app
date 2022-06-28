@@ -18,3 +18,6 @@ INSERT INTO Clients(name, vat, address, phone, email) VALUES ?;
 
 delete:
 DELETE FROM Clients WHERE id = ?;
+
+update:
+UPDATE Clients SET name = ?, vat = ?, address = ?, phone = ?, email = ? WHERE id == ?;

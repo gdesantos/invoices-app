@@ -32,6 +32,18 @@ class SqldClientsDataSource : ClientsDataSource, KoinComponent {
     override suspend fun getClient(id: Int): Flow<Client> =
         database.clientsQueries.selectOne(id.toLong()).asFlow().mapToOne().map { it.toDomain() }
 
+    override suspend fun modifyClient(client: Client) {
+        val clientDb = client.toDb()
+        database.clientsQueries.update(
+            name = clientDb.name,
+            vat = clientDb.vat,
+            address = clientDb.address,
+            phone = clientDb.phone,
+            email = clientDb.email,
+            id = clientDb.id
+        )
+    }
+
     private fun Clients.toDomain() =
         Client(
             id = id.toInt(),
@@ -45,7 +57,7 @@ class SqldClientsDataSource : ClientsDataSource, KoinComponent {
 
     private fun Client.toDb() =
         Clients(
-            id = 0L,
+            id = id.toLong(),
             name = name,
             vat = vat,
             address = (addressLine1 + "\n" + addressLine2).trim(),

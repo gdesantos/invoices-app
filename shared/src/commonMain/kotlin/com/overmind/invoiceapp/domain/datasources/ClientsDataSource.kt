@@ -9,4 +9,5 @@ interface ClientsDataSource {
     suspend fun addClient(client: Client)
     suspend fun deleteClient(id: Int)
     suspend fun getClient(id: Int): Flow<Client>
+    suspend fun modifyClient(client: Client)
 }

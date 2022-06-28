@@ -5,10 +5,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,9 +22,43 @@ import com.overmind.invoiceapp.android.ui.common.focusFixer
 import com.overmind.invoiceapp.android.ui.common.focusFixerParent
 import com.overmind.invoiceapp.android.ui.common.rememberFocusFixerData
 import com.overmind.invoiceapp.domain.entities.Client
+import com.overmind.invoiceapp.domain.usecases.ValidateClient
 
 @Composable
-fun ClientForm(client: MutableState<Client> = remember { mutableStateOf(emptyClient()) }) {
+fun ClientForm(
+    title: String,
+    client: MutableState<Client> = remember { mutableStateOf(emptyClient()) },
+    result: MutableState<ValidateClient.Result?> = remember { mutableStateOf(null) },
+    onBack: () -> Unit,
+    onSave: () -> Unit
+) {
+    Column {
+        TopAppBar(
+            title = { Text(title) },
+            navigationIcon = {
+                IconButton(onClick = { onBack() }) {
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                }
+            },
+            actions = {
+                IconButton(
+                    onClick = { onSave() }
+                ) { Icon(imageVector = Icons.Default.Save, contentDescription = "Save") }
+            }
+        )
+
+        ClientFormFields(client)
+    }
+
+    when (result.value) {
+        null -> Unit
+        ValidateClient.Result.Ok -> onBack()
+        else -> ErrorDialog(error = result)
+    }
+}
+
+@Composable
+private fun ClientFormFields(client: MutableState<Client>) {
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
     val focusFixerData = rememberFocusFixerData()
@@ -32,9 +66,9 @@ fun ClientForm(client: MutableState<Client> = remember { mutableStateOf(emptyCli
 
     Column(
         modifier =
-        Modifier.focusFixerParent(focusFixerData, coroutineScope, scrollState)
-            .verticalScroll(scrollState)
-            .padding(16.dp),
+            Modifier.focusFixerParent(focusFixerData, coroutineScope, scrollState)
+                .verticalScroll(scrollState)
+                .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         ClientFormField(
@@ -69,7 +103,7 @@ fun ClientForm(client: MutableState<Client> = remember { mutableStateOf(emptyCli
             label = "Phone",
             value = client.value.phone.toString().takeIf { it != "0" } ?: "",
             keyboardOptions =
-            KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Phone),
+                KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Phone),
         ) {
             client.value = client.value.copy(phone = it.toLongOrNull() ?: 0L)
         }
@@ -79,7 +113,7 @@ fun ClientForm(client: MutableState<Client> = remember { mutableStateOf(emptyCli
             label = "Email",
             value = client.value.email,
             keyboardOptions =
-            KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Email),
+                KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Email),
             keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
         ) { client.value = client.value.copy(email = it) }
     }
@@ -115,4 +149,23 @@ private fun ClientFormField(
             onValueChange = onValueChanged
         )
     }
+}
+
+@Composable
+private fun ErrorDialog(error: MutableState<ValidateClient.Result?>) {
+    val message =
+        when (error.value) {
+            ValidateClient.Result.InvalidName -> "Invalid name"
+            ValidateClient.Result.InvalidVat -> "Invalid VAT"
+            ValidateClient.Result.InvalidAddressLine1 -> "Invalid address"
+            ValidateClient.Result.InvalidPhone -> "Invalid phone"
+            ValidateClient.Result.InvalidEmail -> "Invalid email"
+            else -> ""
+        }
+
+    AlertDialog(
+        text = { Text(message) },
+        onDismissRequest = { error.value = null },
+        confirmButton = { TextButton(onClick = { error.value = null }) { Text("Ok") } }
+    )
 }

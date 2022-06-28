@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import androidx.navigation.NavController
 import com.overmind.invoiceapp.android.ui.clients.ClientForm
 import com.overmind.invoiceapp.android.ui.clients.emptyClient
+import com.overmind.invoiceapp.domain.usecases.ValidateClient
 import org.koin.androidx.compose.get
 
 @Composable
@@ -15,8 +16,16 @@ fun EditClientScreen(
     LaunchedEffect(clientId) { viewModel.getClient(clientId) }
 
     val client = remember { mutableStateOf(emptyClient()) }
+    val modifyResult = remember { mutableStateOf<ValidateClient.Result?>(null) }
+
     val uiState by viewModel.uiState.collectAsState()
     client.value = uiState.client
 
-    ClientForm(client)
+    ClientForm(
+        title = "Edit client",
+        client = client,
+        result = modifyResult,
+        onBack = { navController.navigateUp() },
+        onSave = { modifyResult.value = viewModel.modifyClient(client.value) }
+    )
 }
