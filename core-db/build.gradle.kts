@@ -25,7 +25,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":shared"))
+                implementation(project(":core"))
                 implementation("com.squareup.sqldelight:coroutines-extensions:1.5.3")
             }
         }

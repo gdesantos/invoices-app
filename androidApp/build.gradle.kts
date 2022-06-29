@@ -32,7 +32,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":shared"))
+    implementation(project(":core"))
     implementation(project(":core-db"))
 
     implementation("io.insert-koin:koin-android:3.2.0")

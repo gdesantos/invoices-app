@@ -8,5 +8,5 @@ pluginManagement {
 
 rootProject.name = "InvoiceApp"
 include(":androidApp")
-include(":shared")
+include(":core")
 include(":core-db")
