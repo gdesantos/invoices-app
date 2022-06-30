@@ -8,13 +8,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -28,7 +30,15 @@ fun ClientsListScreen(navController: NavController, viewModel: ClientsListViewMo
     val uiState by viewModel.uiState.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        ClientsList(uiState = uiState, navController = navController)
+        Column {
+            SearchBar(viewModel)
+            ClientsList(
+                clients = uiState.filtered,
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
+
         FloatingActionButton(
             modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
             onClick = { navController.navigate(Screen.CreateClient.route) }
@@ -37,20 +47,28 @@ fun ClientsListScreen(navController: NavController, viewModel: ClientsListViewMo
 }
 
 @Composable
-private fun ClientsList(uiState: ClientsListUiState, navController: NavController) {
+private fun ClientsList(
+    clients: List<Client>,
+    navController: NavController,
+    viewModel: ClientsListViewModel
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(uiState.clients) { client ->
-            ClientItem(client = client, navController = navController)
+        items(clients) { client ->
+            ClientItem(client = client, navController = navController, viewModel = viewModel)
         }
     }
 }
 
 @Composable
-private fun ClientItem(client: Client, navController: NavController) {
+private fun ClientItem(
+    client: Client,
+    navController: NavController,
+    viewModel: ClientsListViewModel
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(corner = CornerSize(8.dp)),
@@ -72,7 +90,7 @@ private fun ClientItem(client: Client, navController: NavController) {
                 ClientField(icon = Icons.Outlined.Email, text = client.email)
             }
             Column(modifier = Modifier.align(Alignment.CenterEnd)) {
-                DeleteButton(client)
+                DeleteButton(client, viewModel)
                 EditButton(client = client, navController = navController)
             }
         }
@@ -95,7 +113,7 @@ private fun ClientField(icon: ImageVector?, text: String) {
 }
 
 @Composable
-private fun DeleteButton(client: Client, viewModel: ClientsListViewModel = get()) {
+private fun DeleteButton(client: Client, viewModel: ClientsListViewModel) {
     var showingConfirmationDlg by remember { mutableStateOf(false) }
 
     IconButton(onClick = { showingConfirmationDlg = true }) {
@@ -126,5 +144,54 @@ private fun DeleteButton(client: Client, viewModel: ClientsListViewModel = get()
 private fun EditButton(client: Client, navController: NavController) {
     IconButton(onClick = { navController.navigate(Screen.EditClient.forClient(client.id)) }) {
         Icon(imageVector = Icons.Outlined.Edit, contentDescription = "Edit")
+    }
+}
+
+@Composable
+private fun SearchBar(viewModel: ClientsListViewModel) {
+    var searchFilter by remember { mutableStateOf("") }
+
+    TopAppBar(contentColor = Color.White) {
+        TextField(
+            modifier = Modifier.fillMaxWidth().align(Alignment.CenterVertically),
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search",
+                    modifier = Modifier.padding(15.dp).size(24.dp)
+                )
+            },
+            trailingIcon = {
+                if (searchFilter.isNotEmpty()) {
+                    IconButton(
+                        onClick = {
+                            searchFilter = ""
+                            viewModel.filterClients(searchFilter)
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Clear",
+                            modifier = Modifier.padding(15.dp).size(24.dp)
+                        )
+                    }
+                }
+            },
+            singleLine = true,
+            placeholder = { Text("Search filter") },
+            value = searchFilter,
+            onValueChange = {
+                searchFilter = it
+                viewModel.filterClients(searchFilter)
+            },
+            colors =
+                TextFieldDefaults.textFieldColors(
+                    textColor = Color.White,
+                    cursorColor = Color.White,
+                    leadingIconColor = Color.White,
+                    trailingIconColor = Color.White,
+                    placeholderColor = Color.White.copy(alpha = 0.4f)
+                )
+        )
     }
 }

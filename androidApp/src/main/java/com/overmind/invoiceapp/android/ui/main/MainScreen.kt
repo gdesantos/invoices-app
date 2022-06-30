@@ -19,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.overmind.invoiceapp.android.R
+import com.overmind.invoiceapp.android.ui.WipScreen
 import com.overmind.invoiceapp.android.ui.clients.clientsGraph
 import org.koin.androidx.compose.get
 
@@ -64,9 +65,9 @@ fun MainScreen(viewModel: MainViewModel = get()) {
             startDestination = Screen.Clients.route
         ) {
             clientsGraph(navController)
-            composable(Screen.BusinessList.route) {}
-            composable(Screen.ProductList.route) {}
-            composable(Screen.Invoices.route) {}
+            composable(Screen.BusinessList.route) { WipScreen() }
+            composable(Screen.ProductList.route) { WipScreen() }
+            composable(Screen.Invoices.route) { WipScreen() }
         }
     }
 }

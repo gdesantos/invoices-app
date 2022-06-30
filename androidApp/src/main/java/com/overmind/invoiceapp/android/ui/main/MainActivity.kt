@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         setContent {
             MaterialTheme {
                 val systemUiController = rememberSystemUiController()
-                systemUiController.setStatusBarColor(color = Color.White)
+                systemUiController.setStatusBarColor(color = MaterialTheme.colors.primary)
                 systemUiController.setNavigationBarColor(color = MaterialTheme.colors.primary)
 
                 MainScreen()
