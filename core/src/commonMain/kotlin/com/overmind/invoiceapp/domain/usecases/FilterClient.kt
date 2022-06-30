@@ -8,7 +8,7 @@ class FilterClient {
         client.name.contains(filter, ignoreCase = true) ||
             client.email.contains(filter, ignoreCase = true) ||
             client.vat.contains(filter, ignoreCase = true) ||
-            client.phone.toString().contains(filter) ||
+            client.phone.contains(filter, ignoreCase = true) ||
             client.addressLine1.contains(filter, ignoreCase = true) ||
             client.addressLine2.contains(filter, ignoreCase = true)
 }

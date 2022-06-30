@@ -101,11 +101,11 @@ private fun ClientFormFields(client: MutableState<Client>) {
             modifier = Modifier.focusFixer(focusFixerData, coroutineScope, scrollState),
             icon = Icons.Outlined.Phone,
             label = "Phone",
-            value = client.value.phone.toString().takeIf { it != "0" } ?: "",
+            value = client.value.phone,
             keyboardOptions =
                 KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Phone),
         ) {
-            client.value = client.value.copy(phone = it.toLongOrNull() ?: 0L)
+            client.value = client.value.copy(phone = it)
         }
         ClientFormField(
             modifier = Modifier.focusFixer(focusFixerData, coroutineScope, scrollState),

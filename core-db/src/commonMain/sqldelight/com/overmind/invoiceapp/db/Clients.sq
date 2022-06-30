@@ -3,7 +3,7 @@ CREATE TABLE Clients(
     name TEXT NOT NULL,
     vat TEXT NOT NULL,
     address TEXT NOT NULL,
-    phone INTEGER NOT NULL,
+    phone TEXT NOT NULL,
     email TEXT NOT NULL
 );
 
