@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("com.google.gms.google-services")
     kotlin("android")
 }
 
@@ -49,4 +50,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.1.1")
     implementation("androidx.navigation:navigation-compose:2.4.2")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.23.1")
+
+    implementation(platform("com.google.firebase:firebase-bom:30.2.0"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "808399040452",
+    "project_id": "invoices-app-ad564",
+    "storage_bucket": "invoices-app-ad564.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808399040452:android:9f5f1a898243bb2719fe91",
+        "android_client_info": {
+          "package_name": "com.overmind.invoiceapp.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "808399040452-1mvh7hrm0ka3sfnslfusan6dvu0qtrjk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfqz4YYdMazFuCh5JhljILF05rbRFowXY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "808399040452-1mvh7hrm0ka3sfnslfusan6dvu0qtrjk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
