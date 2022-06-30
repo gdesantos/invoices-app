@@ -31,7 +31,7 @@ fun ClientsListScreen(navController: NavController, viewModel: ClientsListViewMo
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column {
-            SearchBar(viewModel)
+            SearchBar { filter -> viewModel.filterClients(filter) }
             ClientsList(
                 clients = uiState.filtered,
                 navController = navController,
@@ -58,7 +58,11 @@ private fun ClientsList(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(clients) { client ->
-            ClientItem(client = client, navController = navController, viewModel = viewModel)
+            ClientItem(
+                client = client,
+                onDelete = { viewModel.deleteClient(client.id) },
+                onEdit = { navController.navigate(Screen.EditClient.forClient(client.id)) }
+            )
         }
     }
 }
@@ -66,8 +70,8 @@ private fun ClientsList(
 @Composable
 private fun ClientItem(
     client: Client,
-    navController: NavController,
-    viewModel: ClientsListViewModel
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -90,8 +94,8 @@ private fun ClientItem(
                 ClientField(icon = Icons.Outlined.Email, text = client.email)
             }
             Column(modifier = Modifier.align(Alignment.CenterEnd)) {
-                DeleteButton(client, viewModel)
-                EditButton(client = client, navController = navController)
+                DeleteButton(client, onDelete)
+                EditButton { onEdit() }
             }
         }
     }
@@ -113,7 +117,7 @@ private fun ClientField(icon: ImageVector?, text: String) {
 }
 
 @Composable
-private fun DeleteButton(client: Client, viewModel: ClientsListViewModel) {
+private fun DeleteButton(client: Client, onDelete: () -> Unit) {
     var showingConfirmationDlg by remember { mutableStateOf(false) }
 
     IconButton(onClick = { showingConfirmationDlg = true }) {
@@ -128,7 +132,7 @@ private fun DeleteButton(client: Client, viewModel: ClientsListViewModel) {
             confirmButton = {
                 TextButton(
                     onClick = {
-                        viewModel.deleteClient(client.id)
+                        onDelete()
                         showingConfirmationDlg = false
                     }
                 ) { Text("Delete") }
@@ -141,14 +145,14 @@ private fun DeleteButton(client: Client, viewModel: ClientsListViewModel) {
 }
 
 @Composable
-private fun EditButton(client: Client, navController: NavController) {
-    IconButton(onClick = { navController.navigate(Screen.EditClient.forClient(client.id)) }) {
+private fun EditButton(onEdit: () -> Unit) {
+    IconButton(onClick = { onEdit() }) {
         Icon(imageVector = Icons.Outlined.Edit, contentDescription = "Edit")
     }
 }
 
 @Composable
-private fun SearchBar(viewModel: ClientsListViewModel) {
+private fun SearchBar(onFilterChanged: (String) -> Unit) {
     var searchFilter by remember { mutableStateOf("") }
 
     TopAppBar(contentColor = Color.White) {
@@ -166,7 +170,7 @@ private fun SearchBar(viewModel: ClientsListViewModel) {
                     IconButton(
                         onClick = {
                             searchFilter = ""
-                            viewModel.filterClients(searchFilter)
+                            onFilterChanged(searchFilter)
                         }
                     ) {
                         Icon(
@@ -182,7 +186,7 @@ private fun SearchBar(viewModel: ClientsListViewModel) {
             value = searchFilter,
             onValueChange = {
                 searchFilter = it
-                viewModel.filterClients(searchFilter)
+                onFilterChanged(searchFilter)
             },
             colors =
                 TextFieldDefaults.textFieldColors(
@@ -190,7 +194,8 @@ private fun SearchBar(viewModel: ClientsListViewModel) {
                     cursorColor = Color.White,
                     leadingIconColor = Color.White,
                     trailingIconColor = Color.White,
-                    placeholderColor = Color.White.copy(alpha = 0.4f)
+                    placeholderColor = Color.White.copy(alpha = 0.4f),
+                    backgroundColor = MaterialTheme.colors.primary
                 )
         )
     }

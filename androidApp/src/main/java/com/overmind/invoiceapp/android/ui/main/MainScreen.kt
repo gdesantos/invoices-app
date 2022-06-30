@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,41 +20,19 @@ import androidx.navigation.compose.rememberNavController
 import com.overmind.invoiceapp.android.R
 import com.overmind.invoiceapp.android.ui.WipScreen
 import com.overmind.invoiceapp.android.ui.clients.clientsGraph
-import org.koin.androidx.compose.get
 
 @Composable
-fun MainScreen(viewModel: MainViewModel = get()) {
+fun MainScreen() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val uiState = viewModel.uiState.collectAsState()
 
     Scaffold(
         bottomBar = {
             BottomNavigation {
-                Tab(
-                    tabInfo = TabInfo.Clients,
-                    uiState.value.clientsTabEnabled,
-                    navController,
-                    navBackStackEntry
-                )
-                Tab(
-                    tabInfo = TabInfo.Business,
-                    uiState.value.businessTabEnabled,
-                    navController,
-                    navBackStackEntry
-                )
-                Tab(
-                    tabInfo = TabInfo.Products,
-                    uiState.value.productsTabEnabled,
-                    navController,
-                    navBackStackEntry
-                )
-                Tab(
-                    tabInfo = TabInfo.Invoices,
-                    uiState.value.invoicesTabEnabled,
-                    navController,
-                    navBackStackEntry
-                )
+                Tab(tabInfo = TabInfo.Clients, navController, navBackStackEntry)
+                Tab(tabInfo = TabInfo.Business, navController, navBackStackEntry)
+                Tab(tabInfo = TabInfo.Products, navController, navBackStackEntry)
+                Tab(tabInfo = TabInfo.Invoices, navController, navBackStackEntry)
             }
         }
     ) { innerPadding ->
@@ -75,7 +52,6 @@ fun MainScreen(viewModel: MainViewModel = get()) {
 @Composable
 private fun RowScope.Tab(
     tabInfo: TabInfo,
-    enabled: Boolean,
     navController: NavController,
     navBackStackEntry: NavBackStackEntry?
 ) {
@@ -84,7 +60,6 @@ private fun RowScope.Tab(
         label = { Text(tabInfo.title) },
         selected =
             navBackStackEntry?.destination?.hierarchy?.any { it.route == tabInfo.route } == true,
-        enabled = enabled,
         selectedContentColor = Color.White,
         unselectedContentColor = Color.White.copy(alpha = 0.4f),
         onClick = {
