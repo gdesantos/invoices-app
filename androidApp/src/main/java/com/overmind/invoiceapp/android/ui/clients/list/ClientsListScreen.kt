@@ -90,8 +90,12 @@ private fun ClientItem(
                 if (client.addressLine2.isNotEmpty()) {
                     ClientField(icon = null, text = client.addressLine2)
                 }
-                ClientField(icon = Icons.Outlined.Phone, text = client.phone.toString())
-                ClientField(icon = Icons.Outlined.Email, text = client.email)
+                if (client.phone.isNotEmpty()) {
+                    ClientField(icon = Icons.Outlined.Phone, text = client.phone)
+                }
+                if(client.email.isNotEmpty()) {
+                    ClientField(icon = Icons.Outlined.Email, text = client.email)
+                }
             }
             Column(modifier = Modifier.align(Alignment.CenterEnd)) {
                 DeleteButton(client, onDelete)

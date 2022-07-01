@@ -9,8 +9,8 @@ class ValidateClient {
             client.name.isEmpty() -> Result.InvalidName
             client.vat.isEmpty() -> Result.InvalidVat
             client.addressLine1.isEmpty() -> Result.InvalidAddressLine1
-            !PHONE_REGEX.matches(client.phone) -> Result.InvalidPhone
-            !MAIL_REGEX.matches(client.email) -> Result.InvalidEmail
+            client.phone.isNotEmpty() && !PHONE_REGEX.matches(client.phone) -> Result.InvalidPhone
+            client.email.isNotEmpty() && !MAIL_REGEX.matches(client.email) -> Result.InvalidEmail
             else -> Result.Ok
         }
 
