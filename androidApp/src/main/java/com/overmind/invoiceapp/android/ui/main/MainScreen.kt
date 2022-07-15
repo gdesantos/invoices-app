@@ -19,6 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.overmind.invoiceapp.android.R
 import com.overmind.invoiceapp.android.ui.WipScreen
+import com.overmind.invoiceapp.android.ui.business.businessGraph
 import com.overmind.invoiceapp.android.ui.clients.clientsGraph
 
 @Composable
@@ -42,7 +43,7 @@ fun MainScreen() {
             startDestination = Screen.Clients.route
         ) {
             clientsGraph(navController)
-            composable(Screen.BusinessList.route) { WipScreen() }
+            businessGraph(navController)
             composable(Screen.ProductList.route) { WipScreen() }
             composable(Screen.Invoices.route) { WipScreen() }
         }
@@ -74,7 +75,7 @@ private fun RowScope.Tab(
 
 private enum class TabInfo(val title: String, @DrawableRes val icon: Int, val route: String) {
     Clients("Clients", R.drawable.ic_clients, Screen.Clients.route),
-    Business("Business", R.drawable.ic_business, Screen.BusinessList.route),
+    Business("Business", R.drawable.ic_business, Screen.Business.route),
     Products("Products", R.drawable.ic_products, Screen.ProductList.route),
     Invoices("Invoices", R.drawable.ic_invoices, Screen.Invoices.route)
 }

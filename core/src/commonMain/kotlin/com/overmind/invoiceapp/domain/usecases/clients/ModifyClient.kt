@@ -1,4 +1,4 @@
-package com.overmind.invoiceapp.domain.usecases
+package com.overmind.invoiceapp.domain.usecases.clients
 
 import com.overmind.invoiceapp.domain.datasources.ClientsDataSource
 import com.overmind.invoiceapp.domain.entities.Client

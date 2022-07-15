@@ -26,11 +26,11 @@ class SqldClientsDataSource : ClientsDataSource, KoinComponent {
     }
 
     override suspend fun deleteClient(id: Int) {
-        database.clientsQueries.delete(id.toLong())
+        database.clientsQueries.delete(id)
     }
 
     override suspend fun getClient(id: Int): Flow<Client> =
-        database.clientsQueries.selectOne(id.toLong()).asFlow().mapToOne().map { it.toDomain() }
+        database.clientsQueries.selectOne(id).asFlow().mapToOne().map { it.toDomain() }
 
     override suspend fun modifyClient(client: Client) {
         val clientDb = client.toDb()
@@ -46,7 +46,7 @@ class SqldClientsDataSource : ClientsDataSource, KoinComponent {
 
     private fun Clients.toDomain() =
         Client(
-            id = id.toInt(),
+            id = id,
             name = name,
             addressLine1 = address.lines().firstOrNull() ?: "",
             addressLine2 = address.lines().getOrNull(1) ?: "",
@@ -57,7 +57,7 @@ class SqldClientsDataSource : ClientsDataSource, KoinComponent {
 
     private fun Client.toDb() =
         Clients(
-            id = id.toLong(),
+            id = id,
             name = name,
             vat = vat,
             address = (addressLine1 + "\n" + addressLine2).trim(),

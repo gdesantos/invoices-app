@@ -1,11 +1,15 @@
-package com.overmind.invoiceapp.android.ui.clients
+package com.overmind.invoiceapp.android.ui.business
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
@@ -15,31 +19,31 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.overmind.invoiceapp.android.ui.common.*
-import com.overmind.invoiceapp.domain.entities.Client
-import com.overmind.invoiceapp.domain.usecases.clients.ValidateClient
+import com.overmind.invoiceapp.domain.entities.Business
+import com.overmind.invoiceapp.domain.usecases.business.AddBusiness
 
 @Composable
-fun ClientForm(
+fun BusinessForm(
     title: String,
-    client: MutableState<Client> = remember { mutableStateOf(emptyClient()) },
-    result: MutableState<ValidateClient.Result?> = remember { mutableStateOf(null) },
+    business: MutableState<Business> = remember { mutableStateOf(emptyBusiness()) },
+    result: MutableState<AddBusiness.Result?> = remember { mutableStateOf(null) },
     onBack: () -> Unit,
     onSave: () -> Unit
 ) {
     Column {
         ItemFormTopBar(title = title, onSave = onSave, onBack = onBack)
-        ClientFormFields(client)
+        BusinessFormFields(business)
     }
 
     when (result.value) {
         null -> Unit
-        ValidateClient.Result.Ok -> onBack()
+        AddBusiness.Result.Ok -> onBack()
         else -> ErrorDialog(error = result)
     }
 }
 
 @Composable
-private fun ClientFormFields(client: MutableState<Client>) {
+private fun BusinessFormFields(business: MutableState<Business>) {
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
     val focusFixerData = rememberFocusFixerData()
@@ -47,69 +51,70 @@ private fun ClientFormFields(client: MutableState<Client>) {
 
     Column(
         modifier =
-            Modifier.focusFixerParent(focusFixerData, coroutineScope, scrollState)
-                .verticalScroll(scrollState)
-                .padding(16.dp),
+        Modifier.focusFixerParent(focusFixerData, coroutineScope, scrollState)
+            .verticalScroll(scrollState)
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         ItemFormField(
             modifier = Modifier.focusFixer(focusFixerData, coroutineScope, scrollState),
             icon = Icons.Outlined.Person,
             label = "Name",
-            value = client.value.name,
+            value = business.value.name,
         ) {
-            client.value = client.value.copy(name = it)
+            business.value = business.value.copy(name = it)
         }
         ItemFormField(
             modifier = Modifier.focusFixer(focusFixerData, coroutineScope, scrollState),
             icon = Icons.Outlined.RequestPage,
             label = "VAT",
-            value = client.value.vat
-        ) { client.value = client.value.copy(vat = it) }
+            value = business.value.vat
+        ) { business.value = business.value.copy(vat = it) }
         ItemFormField(
             modifier = Modifier.focusFixer(focusFixerData, coroutineScope, scrollState),
             icon = Icons.Outlined.HomeWork,
             label = "Address Line 1",
-            value = client.value.addressLine1
-        ) { client.value = client.value.copy(addressLine1 = it) }
+            value = business.value.addressLine1
+        ) { business.value = business.value.copy(addressLine1 = it) }
         ItemFormField(
             modifier = Modifier.focusFixer(focusFixerData, coroutineScope, scrollState),
             icon = null,
             label = "Address Line 2",
-            value = client.value.addressLine2
-        ) { client.value = client.value.copy(addressLine2 = it) }
+            value = business.value.addressLine2
+        ) { business.value = business.value.copy(addressLine2 = it) }
         ItemFormField(
             modifier = Modifier.focusFixer(focusFixerData, coroutineScope, scrollState),
             icon = Icons.Outlined.Phone,
             label = "Phone",
-            value = client.value.phone,
+            value = business.value.phone,
             keyboardOptions =
-                KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Phone),
+            KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Phone),
         ) {
-            client.value = client.value.copy(phone = it)
+            business.value = business.value.copy(phone = it)
         }
         ItemFormField(
             modifier = Modifier.focusFixer(focusFixerData, coroutineScope, scrollState),
             icon = Icons.Outlined.Email,
             label = "Email",
-            value = client.value.email,
+            value = business.value.email,
             keyboardOptions =
-                KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Email),
+            KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Email),
             keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
-        ) { client.value = client.value.copy(email = it) }
+        ) { business.value = business.value.copy(email = it) }
     }
 }
 
 @Composable
-private fun ErrorDialog(error: MutableState<ValidateClient.Result?>) {
+private fun ErrorDialog(error: MutableState<AddBusiness.Result?>) {
     val message =
         when (error.value) {
-            ValidateClient.Result.InvalidName -> "Invalid name"
-            ValidateClient.Result.InvalidVat -> "Invalid VAT"
-            ValidateClient.Result.InvalidAddressLine1 -> "Invalid address"
-            ValidateClient.Result.InvalidPhone -> "Invalid phone"
-            ValidateClient.Result.InvalidEmail -> "Invalid email"
-            else -> ""
+            AddBusiness.Result.InvalidName -> "Invalid name"
+            AddBusiness.Result.InvalidVat -> "Invalid VAT"
+            AddBusiness.Result.InvalidAddressLine1 -> "Invalid address"
+            AddBusiness.Result.InvalidPhone -> "Invalid phone"
+            AddBusiness.Result.InvalidEmail -> "Invalid email"
+            AddBusiness.Result.LimitReached -> "Too many business"
+            AddBusiness.Result.Ok, null -> ""
         }
 
     AlertDialog(

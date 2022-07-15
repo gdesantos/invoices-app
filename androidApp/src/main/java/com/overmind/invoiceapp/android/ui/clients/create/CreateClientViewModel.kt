@@ -2,8 +2,8 @@ package com.overmind.invoiceapp.android.ui.clients.create
 
 import androidx.lifecycle.ViewModel
 import com.overmind.invoiceapp.domain.entities.Client
-import com.overmind.invoiceapp.domain.usecases.AddClient
-import com.overmind.invoiceapp.domain.usecases.ValidateClient
+import com.overmind.invoiceapp.domain.usecases.clients.AddClient
+import com.overmind.invoiceapp.domain.usecases.clients.ValidateClient
 import kotlinx.coroutines.runBlocking
 
 class CreateClientViewModel(

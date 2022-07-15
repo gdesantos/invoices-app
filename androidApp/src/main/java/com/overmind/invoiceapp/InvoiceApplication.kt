@@ -1,9 +1,11 @@
 package com.overmind.invoiceapp
 
 import android.app.Application
+import com.overmind.core.db.di.businessDbModule
 import com.overmind.core.db.di.clientsDbModule
 import com.overmind.core.db.di.coreDbModule
 import com.overmind.invoiceapp.android.di.viewModelsModule
+import com.overmind.invoiceapp.domain.di.businessDomainModule
 import com.overmind.invoiceapp.domain.di.clientsDomainModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -20,6 +22,7 @@ class InvoiceApplication : Application() {
 
             modules(coreDbModule)
             modules(clientsDomainModule, clientsDbModule)
+            modules(businessDomainModule, businessDbModule)
 
             modules(viewModelsModule)
         }

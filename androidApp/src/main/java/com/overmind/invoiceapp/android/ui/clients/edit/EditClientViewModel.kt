@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.overmind.invoiceapp.android.ui.clients.emptyClient
 import com.overmind.invoiceapp.domain.entities.Client
-import com.overmind.invoiceapp.domain.usecases.FetchClient
-import com.overmind.invoiceapp.domain.usecases.ModifyClient
-import com.overmind.invoiceapp.domain.usecases.ValidateClient
+import com.overmind.invoiceapp.domain.usecases.clients.FetchClient
+import com.overmind.invoiceapp.domain.usecases.clients.ModifyClient
+import com.overmind.invoiceapp.domain.usecases.clients.ValidateClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first

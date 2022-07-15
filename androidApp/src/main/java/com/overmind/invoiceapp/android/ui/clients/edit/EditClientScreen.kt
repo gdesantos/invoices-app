@@ -4,7 +4,7 @@ import androidx.compose.runtime.*
 import androidx.navigation.NavController
 import com.overmind.invoiceapp.android.ui.clients.ClientForm
 import com.overmind.invoiceapp.android.ui.clients.emptyClient
-import com.overmind.invoiceapp.domain.usecases.ValidateClient
+import com.overmind.invoiceapp.domain.usecases.clients.ValidateClient
 import org.koin.androidx.compose.get
 
 @Composable
