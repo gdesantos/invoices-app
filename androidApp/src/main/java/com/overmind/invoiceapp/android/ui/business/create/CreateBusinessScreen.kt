@@ -7,10 +7,13 @@ import androidx.navigation.NavController
 import com.overmind.invoiceapp.android.ui.business.BusinessForm
 import com.overmind.invoiceapp.android.ui.business.emptyBusiness
 import com.overmind.invoiceapp.domain.usecases.business.AddBusiness
-import org.koin.androidx.compose.get
+import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun CreateBusinessScreen(navController: NavController, viewModel: CreateBusinessViewModel = get()) {
+fun CreateBusinessScreen(
+    navController: NavController,
+    viewModel: CreateBusinessViewModel = getViewModel()
+) {
     val newBusiness = remember { mutableStateOf(emptyBusiness()) }
     val createResult = remember { mutableStateOf<AddBusiness.Result?>(null) }
 
@@ -18,9 +21,7 @@ fun CreateBusinessScreen(navController: NavController, viewModel: CreateBusiness
         title = "New business",
         business = newBusiness,
         result = createResult,
-        onBack = {
-            navController.navigateUp()
-                 },
+        onBack = { navController.navigateUp() },
         onSave = { createResult.value = viewModel.createBusiness(newBusiness.value) }
     )
 }

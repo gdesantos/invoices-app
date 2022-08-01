@@ -8,7 +8,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.HomeWork
+import androidx.compose.material.icons.outlined.Phone
+import androidx.compose.material.icons.outlined.RequestPage
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,14 +22,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.overmind.invoiceapp.android.ui.common.DeleteButton
 import com.overmind.invoiceapp.android.ui.common.EditButton
-import com.overmind.invoiceapp.android.ui.common.ItemCardField
 import com.overmind.invoiceapp.android.ui.common.ItemCard
+import com.overmind.invoiceapp.android.ui.common.ItemCardField
 import com.overmind.invoiceapp.android.ui.main.Screen
 import com.overmind.invoiceapp.domain.entities.Client
-import org.koin.androidx.compose.get
+import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun ClientsListScreen(navController: NavController, viewModel: ClientsListViewModel = get()) {
+fun ClientsListScreen(
+    navController: NavController,
+    viewModel: ClientsListViewModel = getViewModel()
+) {
 
     val uiState by viewModel.uiState.collectAsState()
 

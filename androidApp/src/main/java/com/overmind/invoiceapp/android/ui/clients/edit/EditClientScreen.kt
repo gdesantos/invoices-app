@@ -5,13 +5,13 @@ import androidx.navigation.NavController
 import com.overmind.invoiceapp.android.ui.clients.ClientForm
 import com.overmind.invoiceapp.android.ui.clients.emptyClient
 import com.overmind.invoiceapp.domain.usecases.clients.ValidateClient
-import org.koin.androidx.compose.get
+import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun EditClientScreen(
     navController: NavController,
     clientId: Int,
-    viewModel: EditClientViewModel = get()
+    viewModel: EditClientViewModel = getViewModel()
 ) {
     LaunchedEffect(clientId) { viewModel.getClient(clientId) }
 

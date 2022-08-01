@@ -23,14 +23,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.overmind.invoiceapp.android.ui.common.DeleteButton
 import com.overmind.invoiceapp.android.ui.common.EditButton
-import com.overmind.invoiceapp.android.ui.common.ItemCardField
 import com.overmind.invoiceapp.android.ui.common.ItemCard
+import com.overmind.invoiceapp.android.ui.common.ItemCardField
 import com.overmind.invoiceapp.android.ui.main.Screen
 import com.overmind.invoiceapp.domain.entities.Business
-import org.koin.androidx.compose.get
+import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun BusinessListScreen(navController: NavController, viewModel: BusinessListViewModel = get()) {
+fun BusinessListScreen(
+    navController: NavController,
+    viewModel: BusinessListViewModel = getViewModel()
+) {
 
     val uiState by viewModel.uiState.collectAsState()
 

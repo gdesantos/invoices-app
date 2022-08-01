@@ -3,13 +3,11 @@ package com.overmind.invoiceapp.domain.usecases.business
 import com.overmind.invoiceapp.domain.datasources.BusinessDataSource
 import com.overmind.invoiceapp.domain.entities.Business
 import kotlinx.coroutines.flow.first
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-class AddBusiness : KoinComponent {
-
-    private val businessDataSource by inject<BusinessDataSource>()
-    private val validateBusiness by inject<ValidateBusiness>()
+class AddBusiness(
+    private val businessDataSource: BusinessDataSource,
+    private val validateBusiness: ValidateBusiness
+) {
 
     suspend operator fun invoke(business: Business): Result {
         if (businessDataSource.countBusiness().first() >= BUSINESS_LIMIT) {

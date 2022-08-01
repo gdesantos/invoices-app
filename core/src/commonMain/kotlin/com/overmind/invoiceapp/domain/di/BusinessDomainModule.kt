@@ -7,8 +7,8 @@ import com.overmind.invoiceapp.domain.usecases.business.ValidateBusiness
 import org.koin.dsl.module
 
 val businessDomainModule = module {
-    factory { FetchAllBusiness() }
-    factory { AddBusiness() }
+    factory { FetchAllBusiness(get()) }
+    factory { AddBusiness(get(), get()) }
     factory { ValidateBusiness() }
-    factory { DeleteBusiness() }
+    factory { DeleteBusiness(get()) }
 }
